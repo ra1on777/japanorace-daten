@@ -1,30 +1,408 @@
 {
-  "_hinweis": "Ketten, die das Spiel erkennt. match: Teilstrings (klein geschrieben) für brand/name; brand_only: nur über brand-Felder erkennen (Name zu mehrdeutig); kinds: erlaubte Ortstypen; search: Commons-Suche für das Ladenfoto; file: fest gewähltes Commons-Foto (hat Vorrang).",
+  "_hinweis": "Ketten, die das Spiel erkennt. match: Teilstrings (klein geschrieben) für brand/name; brand_only: nur über brand-Felder erkennen (Name zu mehrdeutig); kinds: erlaubte Ortstypen; search: Commons-Suche (Text oder Liste) für das Ladenfoto, Auslandsfotos werden übersprungen; file: fest gewähltes Commons-Foto (hat Vorrang).",
   "chains": [
-    {"id": "seicomart", "ja": "セイコーマート", "en": "Seicomart", "region": "Hokkaidō", "match": ["セイコーマート", "seicomart", "セコマ"], "kinds": ["konbini", "supermarket"], "search": "Seicomart store"},
-    {"id": "luckypierrot", "ja": "ラッキーピエロ", "en": "Lucky Pierrot", "region": "Hakodate", "match": ["ラッキーピエロ", "lucky pierrot"], "kinds": ["fast_food", "restaurant", "burger", "cafe"], "search": "Lucky Pierrot Hakodate"},
-    {"id": "hasegawa", "ja": "ハセガワストア", "en": "Hasegawa Store", "region": "Hakodate", "match": ["ハセガワストア", "hasegawa store"], "kinds": ["konbini"], "search": "Hasegawa Store Hakodate"},
-    {"id": "coco", "ja": "ココストア", "en": "Coco Store", "region": "Okinawa", "match": ["ココストア", "coco!", "ココ!", "ココ！"], "kinds": ["konbini"], "search": "Coco store Okinawa convenience"},
-    {"id": "aw", "ja": "A&W", "en": "A&W", "region": "Okinawa", "match": ["a&w", "エイアンドダブリュ", "エンダー"], "kinds": ["fast_food", "restaurant", "burger"], "search": "A&W restaurant Okinawa"},
-    {"id": "jef", "ja": "ジェフ", "en": "Jef", "region": "Okinawa", "match": ["ジェフ", "jef "], "brand_only": false, "kinds": ["fast_food", "restaurant", "burger"], "search": "Jef hamburger Okinawa"},
-    {"id": "sana", "ja": "サンエー", "en": "San-A", "region": "Okinawa", "match": ["サンエー", "san-a"], "kinds": ["supermarket", "mall", "department_store"], "search": "San-A Okinawa"},
-    {"id": "seven", "ja": "セブン-イレブン", "en": "7-Eleven", "match": ["セブン-イレブン", "セブンイレブン", "セブン‐イレブン", "7-eleven", "seven-eleven", "seven eleven"], "kinds": ["konbini"], "search": "7-Eleven store Japan"},
-    {"id": "lawson", "ja": "ローソン", "en": "Lawson", "match": ["ローソン", "lawson"], "kinds": ["konbini", "supermarket"], "search": "Lawson store Japan"},
-    {"id": "familymart", "ja": "ファミリーマート", "en": "FamilyMart", "match": ["ファミリーマート", "familymart", "family mart", "ファミマ"], "kinds": ["konbini"], "search": "FamilyMart store Japan"},
-    {"id": "ministop", "ja": "ミニストップ", "en": "Ministop", "match": ["ミニストップ", "ministop"], "kinds": ["konbini"], "search": "Ministop store Japan"},
-    {"id": "yamazaki", "ja": "デイリーヤマザキ", "en": "Daily Yamazaki", "match": ["デイリーヤマザキ", "daily yamazaki", "ヤマザキショップ", "ヤマザキデイリーストアー"], "kinds": ["konbini"], "search": "Daily Yamazaki store"},
-    {"id": "newdays", "ja": "NewDays", "en": "NewDays", "match": ["newdays", "new days", "ニューデイズ"], "kinds": ["konbini"], "search": "NewDays convenience store station"},
-    {"id": "yoshinoya", "ja": "吉野家", "en": "Yoshinoya", "match": ["吉野家", "yoshinoya"], "kinds": ["fast_food", "restaurant", "gyudon"], "search": "Yoshinoya restaurant Japan"},
-    {"id": "sukiya", "ja": "すき家", "en": "Sukiya", "match": ["すき家", "sukiya"], "kinds": ["fast_food", "restaurant", "gyudon"], "search": "Sukiya restaurant Japan"},
-    {"id": "matsuya", "ja": "松屋", "en": "Matsuya", "match": ["松屋", "matsuya"], "brand_only": true, "kinds": ["fast_food", "restaurant", "gyudon"], "search": "Matsuya gyudon restaurant"},
-    {"id": "cocoichi", "ja": "CoCo壱番屋", "en": "CoCo Ichibanya", "match": ["coco壱番屋", "ｃｏｃｏ壱番屋", "ココイチ", "coco ichibanya", "壱番屋"], "kinds": ["fast_food", "restaurant", "curry"], "search": "CoCo Ichibanya restaurant"},
-    {"id": "misdo", "ja": "ミスタードーナツ", "en": "Mister Donut", "match": ["ミスタードーナツ", "mister donut", "ミスド"], "kinds": ["fast_food", "cafe", "restaurant", "bakery", "confectionery", "donut"], "search": "Mister Donut shop Japan"},
-    {"id": "mos", "ja": "モスバーガー", "en": "MOS Burger", "match": ["モスバーガー", "mos burger"], "kinds": ["fast_food", "restaurant", "burger"], "search": "MOS Burger restaurant Japan"},
-    {"id": "saizeriya", "ja": "サイゼリヤ", "en": "Saizeriya", "match": ["サイゼリヤ", "saizeriya"], "kinds": ["restaurant", "fast_food"], "search": "Saizeriya restaurant"},
-    {"id": "komeda", "ja": "コメダ珈琲店", "en": "Komeda's Coffee", "match": ["コメダ", "komeda"], "kinds": ["cafe", "restaurant"], "search": "Komeda Coffee shop"},
-    {"id": "toyoko", "ja": "東横イン", "en": "Toyoko Inn", "match": ["東横イン", "東横inn", "toyoko inn"], "kinds": ["hotel"], "search": "Toyoko Inn hotel"},
-    {"id": "apa", "ja": "アパホテル", "en": "APA Hotel", "match": ["アパホテル", "apa hotel", "apa ホテル"], "kinds": ["hotel"], "search": "APA Hotel building Japan"},
-    {"id": "routeinn", "ja": "ホテルルートイン", "en": "Hotel Route-Inn", "match": ["ルートイン", "route inn", "route-inn"], "kinds": ["hotel"], "search": "Hotel Route-Inn"},
-    {"id": "aeon", "ja": "イオン", "en": "Aeon", "match": ["イオン", "aeon"], "kinds": ["supermarket", "mall", "department_store"], "search": "AEON Mall Japan"}
+    {
+      "id": "seicomart",
+      "ja": "セイコーマート",
+      "en": "Seicomart",
+      "region": "Hokkaidō",
+      "match": [
+        "セイコーマート",
+        "seicomart",
+        "セコマ"
+      ],
+      "kinds": [
+        "konbini",
+        "supermarket"
+      ],
+      "search": "Seicomart store"
+    },
+    {
+      "id": "luckypierrot",
+      "ja": "ラッキーピエロ",
+      "en": "Lucky Pierrot",
+      "region": "Hakodate",
+      "match": [
+        "ラッキーピエロ",
+        "lucky pierrot"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "burger",
+        "cafe"
+      ],
+      "search": [
+        "Lucky Pierrot Hakodate",
+        "ラッキーピエロ"
+      ]
+    },
+    {
+      "id": "hasegawa",
+      "ja": "ハセガワストア",
+      "en": "Hasegawa Store",
+      "region": "Hakodate",
+      "match": [
+        "ハセガワストア",
+        "hasegawa store"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "Hasegawa Store Hakodate"
+    },
+    {
+      "id": "coco",
+      "ja": "ココストア",
+      "en": "Coco Store",
+      "region": "Okinawa",
+      "match": [
+        "ココストア",
+        "coco!",
+        "ココ!",
+        "ココ！"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": [
+        "Coco Store Okinawa",
+        "ココストア 沖縄",
+        "Coco! Okinawa convenience"
+      ]
+    },
+    {
+      "id": "aw",
+      "ja": "A&W",
+      "en": "A&W",
+      "region": "Okinawa",
+      "match": [
+        "a&w",
+        "エイアンドダブリュ",
+        "エンダー"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "burger"
+      ],
+      "search": "A&W restaurant Okinawa"
+    },
+    {
+      "id": "jef",
+      "ja": "ジェフ",
+      "en": "Jef",
+      "region": "Okinawa",
+      "match": [
+        "ジェフ",
+        "jef "
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "burger"
+      ],
+      "search": [
+        "Jef Okinawa restaurant",
+        "ジェフ 沖縄",
+        "Jef Nuuyaru Burger"
+      ]
+    },
+    {
+      "id": "sana",
+      "ja": "サンエー",
+      "en": "San-A",
+      "region": "Okinawa",
+      "match": [
+        "サンエー",
+        "san-a"
+      ],
+      "kinds": [
+        "supermarket",
+        "mall",
+        "department_store"
+      ],
+      "search": "San-A Okinawa"
+    },
+    {
+      "id": "seven",
+      "ja": "セブン-イレブン",
+      "en": "7-Eleven",
+      "match": [
+        "セブン-イレブン",
+        "セブンイレブン",
+        "セブン‐イレブン",
+        "7-eleven",
+        "seven-eleven",
+        "seven eleven"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "7-Eleven store Japan"
+    },
+    {
+      "id": "lawson",
+      "ja": "ローソン",
+      "en": "Lawson",
+      "match": [
+        "ローソン",
+        "lawson"
+      ],
+      "kinds": [
+        "konbini",
+        "supermarket"
+      ],
+      "search": [
+        "Lawson store Japan",
+        "ローソン 店舗"
+      ]
+    },
+    {
+      "id": "familymart",
+      "ja": "ファミリーマート",
+      "en": "FamilyMart",
+      "match": [
+        "ファミリーマート",
+        "familymart",
+        "family mart",
+        "ファミマ"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "FamilyMart store Japan"
+    },
+    {
+      "id": "ministop",
+      "ja": "ミニストップ",
+      "en": "Ministop",
+      "match": [
+        "ミニストップ",
+        "ministop"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "Ministop store Japan"
+    },
+    {
+      "id": "yamazaki",
+      "ja": "デイリーヤマザキ",
+      "en": "Daily Yamazaki",
+      "match": [
+        "デイリーヤマザキ",
+        "daily yamazaki",
+        "ヤマザキショップ",
+        "ヤマザキデイリーストアー"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "Daily Yamazaki store"
+    },
+    {
+      "id": "newdays",
+      "ja": "NewDays",
+      "en": "NewDays",
+      "match": [
+        "newdays",
+        "new days",
+        "ニューデイズ"
+      ],
+      "kinds": [
+        "konbini"
+      ],
+      "search": "NewDays convenience store station"
+    },
+    {
+      "id": "yoshinoya",
+      "ja": "吉野家",
+      "en": "Yoshinoya",
+      "match": [
+        "吉野家",
+        "yoshinoya"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "gyudon"
+      ],
+      "search": "Yoshinoya restaurant Japan"
+    },
+    {
+      "id": "sukiya",
+      "ja": "すき家",
+      "en": "Sukiya",
+      "match": [
+        "すき家",
+        "sukiya"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "gyudon"
+      ],
+      "search": "Sukiya restaurant Japan"
+    },
+    {
+      "id": "matsuya",
+      "ja": "松屋",
+      "en": "Matsuya",
+      "match": [
+        "松屋",
+        "matsuya"
+      ],
+      "brand_only": true,
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "gyudon"
+      ],
+      "search": "Matsuya gyudon restaurant"
+    },
+    {
+      "id": "cocoichi",
+      "ja": "CoCo壱番屋",
+      "en": "CoCo Ichibanya",
+      "match": [
+        "coco壱番屋",
+        "ｃｏｃｏ壱番屋",
+        "ココイチ",
+        "coco ichibanya",
+        "壱番屋"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "curry"
+      ],
+      "search": "CoCo Ichibanya restaurant"
+    },
+    {
+      "id": "misdo",
+      "ja": "ミスタードーナツ",
+      "en": "Mister Donut",
+      "match": [
+        "ミスタードーナツ",
+        "mister donut",
+        "ミスド"
+      ],
+      "kinds": [
+        "fast_food",
+        "cafe",
+        "restaurant",
+        "bakery",
+        "confectionery",
+        "donut"
+      ],
+      "search": "Mister Donut shop Japan"
+    },
+    {
+      "id": "mos",
+      "ja": "モスバーガー",
+      "en": "MOS Burger",
+      "match": [
+        "モスバーガー",
+        "mos burger"
+      ],
+      "kinds": [
+        "fast_food",
+        "restaurant",
+        "burger"
+      ],
+      "search": "MOS Burger restaurant Japan"
+    },
+    {
+      "id": "saizeriya",
+      "ja": "サイゼリヤ",
+      "en": "Saizeriya",
+      "match": [
+        "サイゼリヤ",
+        "saizeriya"
+      ],
+      "kinds": [
+        "restaurant",
+        "fast_food"
+      ],
+      "search": [
+        "Saizeriya restaurant Japan",
+        "サイゼリヤ 店舗"
+      ]
+    },
+    {
+      "id": "komeda",
+      "ja": "コメダ珈琲店",
+      "en": "Komeda's Coffee",
+      "match": [
+        "コメダ",
+        "komeda"
+      ],
+      "kinds": [
+        "cafe",
+        "restaurant"
+      ],
+      "search": "Komeda Coffee shop"
+    },
+    {
+      "id": "toyoko",
+      "ja": "東横イン",
+      "en": "Toyoko Inn",
+      "match": [
+        "東横イン",
+        "東横inn",
+        "toyoko inn"
+      ],
+      "kinds": [
+        "hotel"
+      ],
+      "search": "Toyoko Inn hotel"
+    },
+    {
+      "id": "apa",
+      "ja": "アパホテル",
+      "en": "APA Hotel",
+      "match": [
+        "アパホテル",
+        "apa hotel",
+        "apa ホテル"
+      ],
+      "kinds": [
+        "hotel"
+      ],
+      "search": "APA Hotel building Japan"
+    },
+    {
+      "id": "routeinn",
+      "ja": "ホテルルートイン",
+      "en": "Hotel Route-Inn",
+      "match": [
+        "ルートイン",
+        "route inn",
+        "route-inn"
+      ],
+      "kinds": [
+        "hotel"
+      ],
+      "search": "Hotel Route-Inn"
+    },
+    {
+      "id": "aeon",
+      "ja": "イオン",
+      "en": "Aeon",
+      "match": [
+        "イオン",
+        "aeon"
+      ],
+      "kinds": [
+        "supermarket",
+        "mall",
+        "department_store"
+      ],
+      "search": [
+        "AEON Mall exterior Japan",
+        "イオンモール"
+      ]
+    }
   ]
 }

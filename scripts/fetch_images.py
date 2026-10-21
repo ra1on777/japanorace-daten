@@ -19,7 +19,10 @@ from pathlib import Path
 
 API = 'https://commons.wikimedia.org/w/api.php'
 UA = 'JapanOrace-Daten/1.0 (https://github.com/ra1on777/japanorace-daten)'
-BAD = re.compile(r'logo|signboard|sign\b|icon|symbol|map|menu|receipt|card|bag|package|wrapper|cup|bottle|seal|stamp|\.svg', re.I)
+BAD = re.compile(r'logo|signboard|icon|symbol|\bmap\b|menu|receipt|card|bag|package|wrapper|bottle|seal|stamp|product|beverage|display|\.svg', re.I)
+# Fotos aus dem Ausland ausschließen: Das Spiel zeigt Japan
+ABROAD = re.compile(r'jakarta|jkt|indonesia|china|chinese|shanghai|beijing|guangzhou|shenzhen|hong ?kong|taiwan|taipei|korea|seoul|thailand|bangkok|philippines|manila|vietnam|hanoi|singapore|malaysia|hawaii|usa|california|new york|canada|london|australia|cambodia|myanmar|india|dubai', re.I)
+STORE = re.compile(r'store|shop|branch|restaurant|hotel|mall|店|exterior|facade|façade', re.I)
 FREE = re.compile(r'^(cc[ -]by|cc0|public domain|pd)', re.I)
 
 
@@ -52,7 +55,7 @@ def infos(titles):
 
 
 def acceptable(title, ii, keys):
-    if ii.get('mime') != 'image/jpeg' or BAD.search(title):
+    if ii.get('mime') != 'image/jpeg' or BAD.search(title) or ABROAD.search(title):
         return False
     if ii.get('width', 0) < 400 or ii.get('height', 0) > ii.get('width', 1) * 1.3:
         return False
@@ -71,15 +74,22 @@ def pick(chain):
         cands = ['File:' + chain['file'].removeprefix('File:')]
         keys = {''}
     else:
-        d = get({'action': 'query', 'list': 'search', 'srnamespace': 6, 'srlimit': 25, 'srsearch': chain['search']})
-        cands = [r['title'] for r in d.get('query', {}).get('search', [])]
+        cands = []
+        searches = chain['search'] if isinstance(chain['search'], list) else [chain['search']]
+        for q in searches:
+            d = get({'action': 'query', 'list': 'search', 'srnamespace': 6, 'srlimit': 30, 'srsearch': q})
+            cands += [r['title'] for r in d.get('query', {}).get('search', []) if r['title'] not in cands]
     if not cands:
         return None
-    ii = infos(cands)
-    for t in cands:
-        if t in ii and acceptable(t, ii[t], keys):
-            return t, ii[t]
-    return None
+    ii = {}
+    for i in range(0, len(cands), 40):
+        ii.update(infos(cands[i:i + 40]))
+    ok = [t for t in cands if t in ii and acceptable(t, ii[t], keys)]
+    if not ok:
+        return None
+    # Ladenansichten bevorzugen, sonst Suchreihenfolge
+    ok.sort(key=lambda t: (0 if STORE.search(t) else 1, cands.index(t)))
+    return ok[0], ii[ok[0]]
 
 
 def main(chains_path, outdir):
