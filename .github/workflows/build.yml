@@ -51,6 +51,8 @@ jobs:
         run: |
           python3 scripts/fetch_images.py data/chains.json site
           du -sh site/img || true
+          # Auswahl als Hinweis am Lauf sichtbar machen (lesbar über die Checks-API)
+          python3 -c "import json;d=json.load(open('site/chains.json'))['chains'];print('::notice title=Kettenfotos::'+'%0A'.join(k+' | '+v['file']+' | '+v['license'] for k,v in d.items()))" || true
 
       - name: Startseite
         run: |
