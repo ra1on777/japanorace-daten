@@ -21,7 +21,7 @@ API = 'https://commons.wikimedia.org/w/api.php'
 UA = 'JapanOrace-Daten/1.0 (https://github.com/ra1on777/japanorace-daten)'
 BAD = re.compile(r'logo|signboard|icon|symbol|\bmap\b|menu|receipt|card|bag|package|wrapper|bottle|seal|stamp|product|beverage|display|\.svg', re.I)
 # Fotos aus dem Ausland ausschließen: Das Spiel zeigt Japan
-ABROAD = re.compile(r'jakarta|jkt|indonesia|china|chinese|shanghai|beijing|guangzhou|shenzhen|hong ?kong|taiwan|taipei|korea|seoul|thailand|bangkok|philippines|manila|vietnam|hanoi|singapore|malaysia|hawaii|usa|california|new york|canada|london|australia|cambodia|myanmar|india|dubai', re.I)
+ABROAD = re.compile(r'jakarta|\bjkt\b|indonesia|china|chinese|shanghai|beijing|guangzhou|shenzhen|hong ?kong|taiwan|taipei|korea|seoul|thailand|bangkok|philippines|manila|vietnam|hanoi|singapore|malaysia|hawaii|\busa\b|california|new york|canada|london|australia|cambodia|myanmar|\bindia\b|dubai', re.I)
 STORE = re.compile(r'store|shop|branch|restaurant|hotel|mall|店|exterior|facade|façade', re.I)
 FREE = re.compile(r'^(cc[ -]by|cc0|public domain|pd)', re.I)
 
