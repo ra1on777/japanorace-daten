@@ -5,6 +5,6 @@
   "include_tags": [
     "name", "name:en", "name:ja-Latn", "name:ja_rm", "name:ja-Hira", "name:ja_kana", "wikidata", "ele",
     "amenity", "tourism", "natural", "water", "waterway", "historic", "leisure", "man_made", "landuse", "aeroway",
-    "shop", "highway", "mountain_pass", "railway", "highspeed", "access", "religion", "brand"
+    "shop", "highway", "mountain_pass", "railway", "highspeed", "access", "religion", "brand", "brand:en", "brand:ja", "brand:wikidata", "cuisine", "vending", "sport"
   ]
 }

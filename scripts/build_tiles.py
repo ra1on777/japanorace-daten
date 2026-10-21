@@ -12,6 +12,10 @@ Kürzel je Ort (mehrere möglich):
               p Park, e Essen, l Alltag, m Gemeinde, t Schrein
   Dienste:    S Bahnhof, B Bushaltestelle, K Snack (Konbini/Automat), M Mahlzeit,
               H Hotel, h Hostel/Minshuku, C Camping, R Fahrradladen, P Gipfel
+
+Format 2 (ab Oktober 2026) hängt zwei Felder an jede Zeile an:
+  [.., Typ-Index, Kette]   Typ-Index zeigt in index.json "types", Kette ist die id aus data/chains.json
+Format-1-Leser ignorieren die Zusatzfelder.
 """
 import json
 import math
@@ -75,6 +79,114 @@ def classify(t):
     return out
 
 
+CUISINE = {'ramen': 'ramen', 'sushi': 'sushi', 'udon': 'udon', 'soba': 'soba', 'udon;soba': 'soba', 'soba;udon': 'soba',
+           'curry': 'curry', 'japanese_curry': 'curry', 'yakiniku': 'yakiniku', 'yakitori': 'yakitori', 'okonomiyaki': 'okonomiyaki',
+           'takoyaki': 'takoyaki', 'tonkatsu': 'tonkatsu', 'tempura': 'tempura', 'beef_bowl': 'gyudon', 'gyudon': 'gyudon',
+           'donut': 'donut', 'burger': 'burger', 'coffee_shop': 'cafe', 'izakaya': 'izakaya', 'unagi': 'unagi', 'seafood': 'seafood',
+           'chinese': 'chinese', 'italian': 'italian', 'pizza': 'italian', 'okinawan': 'okinawa', 'okinawa_soba': 'okinawa', 'teishoku': 'teishoku',
+           'kaiseki': 'japanese', 'japanese': 'japanese', 'family_restaurant': 'famires', 'ice_cream': 'sweets', 'cake': 'sweets'}
+RELIGION = {'shinto': 'shrine', 'buddhist': 'temple', 'christian': 'church'}
+
+
+def type_of(t):
+    """Ein feiner Ortstyp für Benennung, Texte und Kartensymbole."""
+    g = t.get
+    am, tou, nat, lei, shop, hist = g('amenity', ''), g('tourism', ''), g('natural', ''), g('leisure', ''), g('shop', ''), g('historic', '')
+    if g('railway') == 'station':
+        return 'station'
+    if g('railway') == 'halt':
+        return 'halt'
+    if g('aeroway') == 'aerodrome':
+        return 'airport'
+    if am == 'ferry_terminal':
+        return 'ferry'
+    if g('landuse') == 'harbour':
+        return 'harbour'
+    if g('man_made') in ('lighthouse', 'bridge'):
+        return g('man_made')
+    if am == 'place_of_worship':
+        return RELIGION.get(g('religion', ''), 'worship')
+    if hist in ('castle', 'fort', 'ruins', 'monument', 'memorial', 'archaeological_site'):
+        return 'castle' if hist == 'fort' else hist
+    if tou == 'museum':
+        return 'museum'
+    if am == 'public_bath':
+        return 'sento'
+    if nat == 'hot_spring':
+        return 'onsen'
+    if lei == 'swimming_pool':
+        return 'pool'
+    if nat == 'peak':
+        return 'peak'
+    if g('mountain_pass') == 'yes':
+        return 'pass'
+    if tou == 'viewpoint':
+        return 'viewpoint'
+    if nat == 'beach':
+        return 'beach'
+    if g('waterway') in ('waterfall', 'dam'):
+        return g('waterway')
+    if nat == 'water':
+        return 'lake'
+    if lei in ('stadium', 'sports_centre', 'golf_course', 'amusement_arcade', 'pitch', 'track'):
+        return {'amusement_arcade': 'arcade', 'golf_course': 'golf'}.get(lei, lei)
+    if lei in ('park', 'garden'):
+        return lei
+    if tou == 'camp_site':
+        return 'camp'
+    if tou in ('hotel', 'guest_house', 'hostel', 'motel'):
+        return tou
+    if am in ('restaurant', 'fast_food', 'cafe'):
+        for c in g('cuisine', '').lower().split(';'):
+            if c.strip() in CUISINE:
+                return CUISINE[c.strip()]
+        return am
+    if shop == 'convenience':
+        return 'konbini'
+    if shop in ('supermarket', 'mall', 'department_store', 'bakery', 'confectionery', 'bicycle'):
+        return shop
+    if shop == 'pastry':
+        return 'confectionery'
+    if am == 'vending_machine':
+        return 'vending'
+    if am in ('post_office', 'marketplace', 'townhall', 'library', 'community_centre', 'school', 'college', 'university'):
+        return am
+    if g('highway') == 'bus_stop':
+        return 'bus_stop'
+    return 'other'
+
+
+CHAINS = []
+
+
+def load_chains(path):
+    try:
+        data = json.load(open(path, encoding='utf-8'))['chains']
+    except (OSError, KeyError, ValueError):
+        return
+    for c in data:
+        CHAINS.append((c['id'], [m.lower() for m in c['match']], bool(c.get('brand_only')), set(c.get('kinds') or [])))
+
+
+GENERIC_KIND = {'konbini': 'konbini', 'gyudon': 'fast_food', 'curry': 'restaurant', 'burger': 'fast_food', 'donut': 'fast_food'}
+
+
+def chain_of(t, typ):
+    if not CHAINS:
+        return None
+    brands = [(t.get(k) or '').lower() for k in ('brand', 'brand:ja', 'brand:en')]
+    names = [(t.get(k) or '').lower().strip() for k in ('name', 'name:en')]
+    for cid, pats, brand_only, kinds in CHAINS:
+        if kinds and typ not in kinds and GENERIC_KIND.get(typ) not in kinds and not (typ in ('restaurant', 'fast_food', 'cafe') and kinds & {'restaurant', 'fast_food', 'cafe'}):
+            continue
+        for p in pats:
+            if any(p in b for b in brands if b):
+                return cid
+            if not brand_only and any(n.startswith(p) for n in names if n):
+                return cid
+    return None
+
+
 def point_of(geom):
     t, c = geom['type'], geom['coordinates']
     if t == 'Point':
@@ -128,8 +240,10 @@ def thin(items, cap):
         cell *= 1.5
 
 
-def main(src, outdir):
+def main(src, outdir, chains_path=None):
     t0 = time.time()
+    if chains_path:
+        load_chains(chains_path)
     out = Path(outdir)
     (out / 'tiles').mkdir(parents=True, exist_ok=True)
     hs = set()          # Rasterzellen mit Schnellfahrstrecke
@@ -164,7 +278,9 @@ def main(src, outdir):
                     ele = round(float(str(t['ele']).replace('m', '').strip()))
                 except ValueError:
                     ele = None
+            typ = type_of(t)
             items.append({
+                'ty': typ, 'ch': chain_of(t, typ),
                 'c': ''.join(sorted(codes)), 'lat': p[0], 'lon': p[1],
                 'n': t.get('name') or t.get('brand') or '', 'lt': latin(t), 'k': kana(t),
                 'q': t.get('wikidata') or None, 'e': ele,
@@ -185,6 +301,9 @@ def main(src, outdir):
     for it in items:
         tiles[(math.floor(it['lat'] / TILE), math.floor(it['lon'] / TILE))].append(it)
 
+    types = sorted({it['ty'] for it in items})
+    tix = {t: i for i, t in enumerate(types)}
+    chain_count = defaultdict(int)
     index = {}
     total = 0
     for (ty, tx), lst in tiles.items():
@@ -197,23 +316,28 @@ def main(src, outdir):
         for it in lst:
             if id(it) not in keep:
                 continue
-            row = [it['c'], round(it['lat'] * 1e5), round(it['lon'] * 1e5), it['n'], it['lt'], it['k'], it['q'], it['e'], it['st'] or None]
+            row = [it['c'], round(it['lat'] * 1e5), round(it['lon'] * 1e5), it['n'], it['lt'], it['k'], it['q'], it['e'], it['st'] or None,
+                   tix[it['ty']], it['ch']]
+            if it['ch']:
+                chain_count[it['ch']] += 1
             while row and row[-1] is None:
                 row.pop()
             rows.append(row)
         name = f'{ty}_{tx}'
         with open(out / 'tiles' / f'{name}.json', 'w', encoding='utf-8') as f:
-            json.dump({'v': 1, 'y': ty, 'x': tx, 'r': rows}, f, ensure_ascii=False, separators=(',', ':'))
+            json.dump({'v': 2, 'y': ty, 'x': tx, 'r': rows}, f, ensure_ascii=False, separators=(',', ':'))
         index[name] = len(rows)
         total += len(rows)
 
     with open(out / 'stations.json', 'w', encoding='utf-8') as f:
         json.dump({'v': 1, 'fields': ['lat', 'lon', 'name', 'latin', 'kana', 'flags'], 'rows': stations}, f, ensure_ascii=False, separators=(',', ':'))
     with open(out / 'index.json', 'w', encoding='utf-8') as f:
-        json.dump({'v': 1, 'built': time.strftime('%Y-%m-%d'), 'tile': TILE, 'tiles': index, 'items': total, 'stations': len(stations),
+        json.dump({'v': 2, 'format': 2, 'built': time.strftime('%Y-%m-%d'), 'tile': TILE, 'tiles': index, 'items': total, 'stations': len(stations),
+                   'types': types, 'chains': dict(sorted(chain_count.items(), key=lambda kv: -kv[1])),
                    'source': 'OpenStreetMap-Mitwirkende (ODbL), Auszug von Geofabrik'}, f, ensure_ascii=False, separators=(',', ':'))
+    print('Ketten:', dict(chain_count), flush=True)
     print(f'{len(index)} Kacheln, {total} Orte, {len(stations)} Bahnhöfe, {time.time() - t0:.0f} s', flush=True)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)

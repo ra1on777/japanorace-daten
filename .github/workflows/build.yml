@@ -43,9 +43,18 @@ jobs:
 
       - name: Kacheln bauen
         run: |
-          python3 scripts/build_tiles.py filtered.geojsonseq site
+          python3 scripts/build_tiles.py filtered.geojsonseq site data/chains.json
           cp data/municipalities.json site/
-          echo '<!doctype html><meta charset="utf-8"><title>JapanOrace-Daten</title><p>Datenpaket für JapanOrace. Quelle: © OpenStreetMap-Mitwirkende (ODbL), Wikidata (CC0).</p>' > site/index.html
+
+      - name: Kettenfotos von Wikimedia Commons holen
+        continue-on-error: true
+        run: |
+          python3 scripts/fetch_images.py data/chains.json site
+          du -sh site/img || true
+
+      - name: Startseite
+        run: |
+          echo '<!doctype html><meta charset="utf-8"><title>JapanOrace-Daten</title><p>Datenpaket für JapanOrace. Quellen: © OpenStreetMap-Mitwirkende (ODbL), Wikidata (CC0), Ladenfotos von Wikimedia Commons (Urheber und Lizenz in chains.json).</p>' > site/index.html
           du -sh site; ls site | head
 
       - uses: actions/upload-pages-artifact@v3
