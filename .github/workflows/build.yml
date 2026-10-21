@@ -1,0 +1,63 @@
+name: Daten bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/**', 'data/**', '.github/workflows/**']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: osmium installieren
+        run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+
+      - name: Japan-Auszug von Geofabrik laden
+        run: |
+          curl -fSL --retry 3 -o japan.osm.pbf https://download.geofabrik.de/asia/japan-latest.osm.pbf
+          ls -lh japan.osm.pbf
+
+      - name: Relevante Objekte filtern
+        run: |
+          osmium tags-filter japan.osm.pbf --expressions scripts/filter.txt -o filtered.osm.pbf --overwrite
+          rm japan.osm.pbf
+          ls -lh filtered.osm.pbf
+
+      - name: Als GeoJSON exportieren
+        run: |
+          osmium export filtered.osm.pbf -c scripts/export.json -f geojsonseq -o filtered.geojsonseq --overwrite
+          ls -lh filtered.geojsonseq
+
+      - name: Kacheln bauen
+        run: |
+          python3 scripts/build_tiles.py filtered.geojsonseq site
+          cp data/municipalities.json site/
+          echo '<!doctype html><meta charset="utf-8"><title>JapanOrace-Daten</title><p>Datenpaket für JapanOrace. Quelle: © OpenStreetMap-Mitwirkende (ODbL), Wikidata (CC0).</p>' > site/index.html
+          du -sh site; ls site | head
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

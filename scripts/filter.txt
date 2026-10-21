@@ -1,0 +1,16 @@
+# Was aus dem Japan-Auszug übernommen wird (osmium tags-filter)
+nw/amenity=public_bath,restaurant,cafe,fast_food,post_office,marketplace,townhall,library,community_centre,school,college,university,place_of_worship,ferry_terminal,vending_machine
+nw/tourism=viewpoint,museum,camp_site,hotel,guest_house,hostel,motel
+nw/natural=hot_spring,beach,peak
+nwr/natural=water
+nw/waterway=waterfall,dam
+nw/historic=castle,monument,memorial,archaeological_site,ruins,fort
+nw/leisure=stadium,sports_centre,golf_course,amusement_arcade,pitch,track,park,garden,swimming_pool
+nw/man_made=bridge,lighthouse
+nw/landuse=harbour
+nw/aeroway=aerodrome
+nw/shop=convenience,supermarket,mall,department_store,bakery,confectionery,pastry,bicycle
+n/highway=bus_stop
+n/mountain_pass=yes
+n/railway=station,halt
+w/highspeed=yes
