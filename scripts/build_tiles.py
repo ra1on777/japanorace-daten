@@ -332,7 +332,7 @@ def main(src, outdir, chains_path=None):
     with open(out / 'stations.json', 'w', encoding='utf-8') as f:
         json.dump({'v': 1, 'fields': ['lat', 'lon', 'name', 'latin', 'kana', 'flags'], 'rows': stations}, f, ensure_ascii=False, separators=(',', ':'))
     with open(out / 'index.json', 'w', encoding='utf-8') as f:
-        json.dump({'v': 2, 'format': 2, 'built': time.strftime('%Y-%m-%d'), 'tile': TILE, 'tiles': index, 'items': total, 'stations': len(stations),
+        json.dump({'v': 2, 'format': 2, 'built': time.strftime('%Y-%m-%d %H:%M'), 'tile': TILE, 'tiles': index, 'items': total, 'stations': len(stations),
                    'types': types, 'chains': dict(sorted(chain_count.items(), key=lambda kv: -kv[1])),
                    'source': 'OpenStreetMap-Mitwirkende (ODbL), Auszug von Geofabrik'}, f, ensure_ascii=False, separators=(',', ':'))
     print('Ketten:', dict(chain_count), flush=True)
