@@ -30,6 +30,12 @@ jobs:
           curl -fSL --retry 3 -o japan.osm.pbf https://download.geofabrik.de/asia/japan-latest.osm.pbf
           ls -lh japan.osm.pbf
 
+      - name: Gemeindegrenzen herauslösen
+        run: |
+          osmium tags-filter japan.osm.pbf r/admin_level=7 -o adm.osm.pbf --overwrite
+          osmium export adm.osm.pbf -c scripts/export_adm.json -f geojsonseq --geometry-types=polygon -o adm.geojsonseq --overwrite
+          ls -lh adm.osm.pbf adm.geojsonseq
+
       - name: Relevante Objekte filtern
         run: |
           osmium tags-filter japan.osm.pbf --expressions scripts/filter.txt -o filtered.osm.pbf --overwrite
@@ -45,6 +51,11 @@ jobs:
         run: |
           python3 scripts/build_tiles.py filtered.geojsonseq site data/chains.json
           cp data/municipalities.json site/
+
+      - name: Gemeinde-Raster in die Kacheln schreiben
+        run: |
+          python3 scripts/build_muni_grid.py adm.geojsonseq data/municipalities.json site/tiles 四季彩の丘,青い池,ファーム富田,宗谷岬,日本最北端の地,首里城,ラベンダーイースト | tee grid.log
+          python3 -c "import json;s=json.loads(open('grid.log').read().strip().splitlines()[-1]);print('::notice title=Gemeinde-Raster::'+'%0A'.join([f\"{s['munis_with_boundary']} von {s['munis_total']} Gemeinden, {s['cells']} Landzellen, +{s['bytes_added']/1e6:.2f} MB\"]+s['checks']))"
 
       - name: Kettenfotos von Wikimedia Commons holen
         continue-on-error: true

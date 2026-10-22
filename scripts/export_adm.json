@@ -1,0 +1,6 @@
+{
+  "attributes": { "type": true, "id": true },
+  "linear_tags": false,
+  "area_tags": ["boundary", "admin_level"],
+  "include_tags": ["wikidata", "name", "admin_level", "boundary"]
+}

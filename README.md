@@ -23,6 +23,10 @@ Reiter **Actions** → **Daten bauen** → **Run workflow**. Der Bau dauert etwa
 
 Der Typ-Index zeigt in `index.json → types` (z. B. `shrine`, `konbini`, `harbour`). Die Kette ist die `id` aus `data/chains.json`. Format-1-Leser ignorieren die beiden letzten Felder.
 
+### Gemeinde-Raster
+
+Kacheln an Land enthalten zusätzlich `gq` (Wikidata-IDs der Gemeinden, Index 0 = keine) und `g` (Lauflängen `[Index, Anzahl, …]` über 50 × 50 Zellen à 0,005°, zeilenweise von Süd nach Nord, je Zeile von West nach Ost). Grundlage sind die OSM-Gemeindegrenzen (`admin_level=7`). So ordnet das Spiel jeden Punkt der Gemeinde zu, in der er wirklich liegt, nicht der mit dem nächsten Mittelpunkt.
+
 ## Ketten pflegen
 
 `data/chains.json` listet die erkannten Ketten. `match` sind Namensbestandteile, `kinds` die erlaubten Ortstypen, `search` die Commons-Suche für das Foto. Passt ein Foto nicht, trägt man unter `file` einen festen Commons-Dateinamen ein. Logo-Dateien werden nie genommen.
